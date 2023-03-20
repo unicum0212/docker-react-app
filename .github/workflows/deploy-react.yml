@@ -3,7 +3,7 @@ name: deploy-react
 on: 
   push:
     branches:
-      - main
+      - master
       
 jobs:
   build_image:
