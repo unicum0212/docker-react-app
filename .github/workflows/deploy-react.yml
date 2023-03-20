@@ -1,5 +1,9 @@
 name: deploy-react
-
+env:
+  EB_APP_NAME: "Docker"
+  EB_ENV_NAME: "Docker-env"
+  AWS_REGION_NAME: "eu-central-1"
+  EB_PACKAGE_S3_BUCKET_NAME: "elasticbeanstalk-eu-central-1-648494430292"
 on: 
   push:
     branches:
@@ -15,3 +19,18 @@ jobs:
       - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - run: docker build -t flawwwless/react-test -f Dockerfile.dev .
       - run: docker run -e CI=true flawwwless/react-test npm test
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB  
+        uses: einaregilsson/beanstalk-deploy@v18
+        with: 
+          aws_access_key      : ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key      : ${{ secrets.AWS_SECRET_KEY }}
+          application_name    : ${{ env.EB_APP_NAME }}
+          environment_name    : ${{env.EB_ENV_NAME }}
+          existing_bucket_name: ${{ env.EB_PACKAGE_S3_BUCKET_NAME }}
+          region              : ${{ env.AWS_REGION_NAME }}
+          version_label       : ${{ github.sha }}
+          deployment_package  : deploy.zip
