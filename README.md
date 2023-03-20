@@ -1,5 +1,7 @@
-# Getting Started with Create React App
+# Status of Last Deployment:<br>
+<img src="https://github.com/unicum0212/docker-react-app/workflows/deploy-react/badge.svg?branch=master"><br>
 
+# Getting Started with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
